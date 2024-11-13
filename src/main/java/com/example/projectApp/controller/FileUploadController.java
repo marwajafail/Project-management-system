@@ -62,5 +62,38 @@ public class FileUploadController {
         }
     }
 
+    @PostMapping("/")
+    public ResponseEntity<?> handleFileUpload(@RequestParam("files") MultipartFile[] files) {
+        try {
+            // Check if at least one file was uploaded
+            if (files.length < 1) {
+                return new ResponseEntity<>("You need to upload at least 1 file.", HttpStatus.BAD_REQUEST);
+            }
+
+            // Store each file
+            for (MultipartFile file : files) {
+                storageService.store(file);
+            }
+
+            // Create a message with the names of the uploaded files
+            StringBuilder message = new StringBuilder("Successfully uploaded: ");
+            for (int i = 0; i < files.length; i++) {
+                if (i > 0) message.append(", ");
+                message.append(files[i].getOriginalFilename());
+            }
+            message.append("!");
+
+            return ResponseEntity.status(HttpStatus.OK).body(message.toString());
+        } catch (Exception e) {
+            // Print error to the console and return a bad request response
+            System.out.println("An error occurred: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @ExceptionHandler(StorageFileNotFoundException.class)
+    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
+        return ResponseEntity.notFound().build();
+    }
 
 }
