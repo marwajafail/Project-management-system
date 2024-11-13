@@ -113,6 +113,23 @@ public class TypeController {
         }
     }
 
+    // To delete a type record
+    @DeleteMapping("/{typeId}")
+    public ResponseEntity<GenericDao<Boolean>> deleteType(@PathVariable(value = "typeId") Long typeId) {
+        try {
+            if (UserService.getCurrentLoggedInUser().getRole().getName().equalsIgnoreCase("Manager")) {
+            GenericDao<Boolean> genericDao = typeService.deleteType(typeId);
 
+            return genericDao.getErrors().isEmpty() ?
+                    new ResponseEntity<>(genericDao, HttpStatus.OK) :
+                    new ResponseEntity<>(genericDao, HttpStatus.BAD_REQUEST);
+
+        } else {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }}
+            catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }
