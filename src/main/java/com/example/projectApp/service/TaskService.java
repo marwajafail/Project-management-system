@@ -30,6 +30,7 @@ public class TaskService {
         this.userRepository = userRepository;
     }
 
+
     public GenericDao<TaskDto> getByTaskIdAndProjectId(Long taskId, Long projectId) {
         GenericDao<TaskDto> returnDao = new GenericDao<>();
         List<String> errors = new ArrayList<>();
