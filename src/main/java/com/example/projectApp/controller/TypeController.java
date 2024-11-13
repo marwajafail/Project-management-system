@@ -96,6 +96,23 @@ public class TypeController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+    // To update type record
+    @PutMapping
+    public ResponseEntity<GenericDao<TypeDto>> editType(@RequestBody TypeDto typeDto) {
+        try {
+            if (UserService.getCurrentLoggedInUser().getRole().getName().equalsIgnoreCase("Manager")) {
+            GenericDao<TypeDto> genericDao = typeService.editType(typeDto);
+
+            return genericDao.getErrors().isEmpty() ?
+                    new ResponseEntity<>(genericDao, HttpStatus.OK) :
+                    new ResponseEntity<>(genericDao, HttpStatus.BAD_REQUEST);
+        }else {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }} catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 
 }
