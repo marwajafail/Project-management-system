@@ -1,11 +1,9 @@
 package com.example.projectApp.model;
-
 import com.example.projectApp.Dto.RoleDto;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
