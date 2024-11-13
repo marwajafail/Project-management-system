@@ -114,7 +114,26 @@ public class UserController {
         }
     }
 
+    @PostMapping("/deactivate")
 
+    public ResponseEntity<?> deactivateUser(@RequestParam Long uid) {
+        try {
+            if (UserService.getCurrentLoggedInUser().getRole().getName().equalsIgnoreCase("Manager")) {
+                GenericDao<Boolean> result = userService.deleteUser(uid);
+                if (result.getObject()) {
+                    return ResponseEntity.ok("User has been deactivated successfully.");
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getErrors());
+                }
+            } else {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+
+            System.out.println("Exception caught and log saved.");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping
     public ResponseEntity<GenericDao<List<UserDto>>> getAllUsers() {
